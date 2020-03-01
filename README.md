@@ -1,4 +1,5 @@
-# Exponential histograms
+# Exponential histograms [![Actions Status](https://github.com/monochromegane/exponential-histograms/workflows/Go/badge.svg)](https://github.com/monochromegane/exponential-histograms/actions)
+
 
 Exponential histograms is a data structure for sliding windows. It is from `Maintaining Stream Statistics over Sliding Windows, M.Datar, A.Gionis, P.Indyk, R.Motwani; ACM-SIAM, 2002`.
 
