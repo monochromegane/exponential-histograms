@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestAddBits(t *testing.T) {
+func TestBits(t *testing.T) {
 	hist := New(10, 0.5)
 	stream := []uint{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0}
 	for _, x := range stream {
@@ -26,11 +26,17 @@ func TestAddBits(t *testing.T) {
 	if hist.time != uint(len(stream)) {
 		t.Errorf("Time should be %d, but %d", len(stream), hist.time)
 	}
+
 	if hist.total != 8 {
 		t.Errorf("Total should be %d, but %d", 8, hist.total)
 	}
+
 	if hist.last != 4 {
 		t.Errorf("Last should be %d, but %d", 4, hist.last)
+	}
+
+	if count := hist.Count(); count != 6.0 {
+		t.Errorf("Count should return %f, but %f", 6.0, count)
 	}
 
 	// Expectation of the buckets
@@ -66,14 +72,24 @@ func TestAddBits(t *testing.T) {
 		t.Errorf("TimeStamp at 0 of 2^2 should be %d, but %d", 10, time)
 	}
 }
-func TestCountBits(t *testing.T) {
-	hist := New(10, 0.5)
-	stream := []uint{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0}
-	for _, x := range stream {
-		hist.Add(x)
+
+func TestPositiveIntegers(t *testing.T) {
+	hist := New(200, 0.01)
+	for i := 1; i <= 200; i++ {
+		hist.Add(uint(i))
 	}
-	count := hist.Count()
-	if count != 6.0 {
-		t.Errorf("Count should return %f, but %f", 6.0, count)
+
+	if hist.time != 200 {
+		t.Errorf("Time should be %d, but %d", 200, hist.time)
+	}
+	if hist.total != 20100 {
+		t.Errorf("Total should be %d, but %d", 20100, hist.total)
+	}
+	if hist.last != 256 {
+		t.Errorf("Last should be %d, but %d", 256, hist.last)
+	}
+
+	if count := hist.Count(); count != 19972.0 {
+		t.Errorf("Count should return %f, but %f", 19972.0, count)
 	}
 }
