@@ -66,3 +66,14 @@ func TestAddBits(t *testing.T) {
 		t.Errorf("TimeStamp at 0 of 2^2 should be %d, but %d", 10, time)
 	}
 }
+func TestCountBits(t *testing.T) {
+	hist := New(10, 0.5)
+	stream := []uint{1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0}
+	for _, x := range stream {
+		hist.Add(x)
+	}
+	count := hist.Count()
+	if count != 6.0 {
+		t.Errorf("Count should return %f, but %f", 6.0, count)
+	}
+}

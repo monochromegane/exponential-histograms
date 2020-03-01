@@ -33,7 +33,8 @@ func (e *ExpHist) Add(x uint) {
 }
 
 func (e *ExpHist) Count() float64 {
-	return 0.0
+	// > Fact 1: The absolute error in our estimate is at most C/2, where C is the size of the last bucket.
+	return float64(e.total) - float64(e.last)/2.0
 }
 
 func (e *ExpHist) drop() {
