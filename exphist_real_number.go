@@ -42,6 +42,14 @@ func (e *ExpHistRealNumber) Tail() Buckets {
 	}
 }
 
+func (e *ExpHistRealNumber) Scale(gamma float64) {
+	for i := 0; i < len(e.buckets); i++ {
+		for j := 0; j < len(e.buckets[i]); j++ {
+			e.buckets[i][j].content *= gamma
+		}
+	}
+}
+
 func (e *ExpHistRealNumber) merge() {
 	for i, _ := range e.buckets {
 		if len(e.buckets[i]) < e.mergeSize {
