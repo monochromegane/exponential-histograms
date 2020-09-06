@@ -60,7 +60,7 @@ The absolute error in the value is at most C/2, where C is the size of the last 
 ```go
 	hist := NewForVector(2)
 	for i := 1; i <= 200; i++ {
-		hist.Add(float64(i))
+		hist.Add([]float64{float64(i), float64(i)})
 	}
 
 	sum := hist.Sum()
