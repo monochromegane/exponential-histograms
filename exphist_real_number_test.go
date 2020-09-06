@@ -25,7 +25,7 @@ func TestExpHistRealNumberAdd(t *testing.T) {
 	}
 
 	// [7.7](cap:1) [12.1](cap:2) [11.0](cap:4)
-	if actual := len(hist.buckets); actual != 3 {
+	if actual := len(hist.exphistV.buckets); actual != 3 {
 		t.Errorf("ExpHistRealNumber should have %d buckets, but %d", 3, actual)
 	}
 }

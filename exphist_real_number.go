@@ -1,77 +1,50 @@
 package exphist
 
 type ExpHistRealNumber struct {
-	mergeSize int
-	buckets   Buckets
+	exphistV *ExpHistVector
 }
 
 func NewForRealNumber(m int) *ExpHistRealNumber {
 	return &ExpHistRealNumber{
-		mergeSize: m + 1,
-		buckets:   [][]Bucket{[]Bucket{}},
+		exphistV: NewForVector(m),
 	}
 }
 
 func (e *ExpHistRealNumber) Add(x float64) {
-	bucket := Bucket{
-		content:  x,
-		capacity: 1,
-	}
-	e.buckets[0] = append(e.buckets[0], bucket)
-
-	e.merge()
+	e.exphistV.Add([]float64{x})
 }
 
 func (e *ExpHistRealNumber) Drop() {
-	e.tail()
+	e.exphistV.Drop()
 }
 
 func (e *ExpHistRealNumber) Size() int {
-	return e.buckets.Size()
+	return e.exphistV.Size()
 }
 
 func (e *ExpHistRealNumber) Sum() float64 {
-	return e.buckets.Sum()
+	return e.exphistV.Sum()[0]
 }
 
 func (e *ExpHistRealNumber) Tail() Buckets {
-	if len(e.buckets[len(e.buckets)-1]) == 1 {
-		return [][]Bucket{e.buckets[len(e.buckets)-1]}
-	} else {
-		return [][]Bucket{[]Bucket{e.buckets[len(e.buckets)-1][0]}}
+	t := e.exphistV.Tail()
+
+	buckets := make([][]Bucket, len(t))
+	for i, _ := range t {
+		bs := make([]Bucket, len(t[i]))
+		for j, _ := range t[i] {
+			bs[j] = Bucket{
+				capacity: t[i][j].capacity,
+				content:  t[i][j].contents[0],
+			}
+		}
+		buckets[i] = bs
 	}
+	return buckets
 }
 
 func (e *ExpHistRealNumber) Scale(gamma float64) {
-	for i := 0; i < len(e.buckets); i++ {
-		for j := 0; j < len(e.buckets[i]); j++ {
-			e.buckets[i][j].content *= gamma
-		}
-	}
-}
-
-func (e *ExpHistRealNumber) merge() {
-	for i, _ := range e.buckets {
-		if len(e.buckets[i]) < e.mergeSize {
-			continue
-		}
-		if i == len(e.buckets)-1 {
-			e.buckets = append(e.buckets, []Bucket{})
-		}
-		e.buckets[i+1] = append(e.buckets[i+1], Bucket{
-			content:  e.buckets[i][0].content + e.buckets[i][1].content,
-			capacity: e.buckets[i][0].capacity + e.buckets[i][1].capacity,
-		})
-		e.buckets[i] = e.buckets[i][2:]
-	}
-}
-
-func (e *ExpHistRealNumber) tail() {
-	if len(e.buckets[len(e.buckets)-1]) == 1 {
-		e.buckets = e.buckets[0 : len(e.buckets)-1]
-	} else {
-		e.buckets[len(e.buckets)-1] = e.buckets[len(e.buckets)-1][1:]
-	}
+	e.exphistV.Scale(gamma)
 }
 
 type Buckets [][]Bucket
