@@ -40,6 +40,36 @@ The absolute error in the value is at most C/2, where C is the size of the last 
 	fmt.Println(count) // 19972.0 (Actual: 20100.0)
 ```
 
+### Real numbers
+
+```go
+	hist := NewForRealNumber(2)
+	for i := 1; i <= 200; i++ {
+		hist.Add(float64(i))
+	}
+
+	sum := hist.Sum()
+	fmt.Println(sum) // 20100.0 (Actual: 20100.0)
+
+	size := hist.Size()
+	fmt.Println(size) // 200.0
+```
+
+### Vector of real numbers
+
+```go
+	hist := NewForVector(2)
+	for i := 1; i <= 200; i++ {
+		hist.Add(float64(i))
+	}
+
+	sum := hist.Sum()
+	fmt.Println(sum) // [20100.0 20100.0] (Actual: [20100.0 20100.0])
+
+	size := hist.Size()
+	fmt.Println(size) // 200.0
+```
+
 ## Installation
 
 ```sh
