@@ -55,7 +55,7 @@ The absolute error in the value is at most C/2, where C is the size of the last 
 	fmt.Println(size) // 200.0
 ```
 
-### Vector of real numbers
+### Vector of real numbers (Original)
 
 ```go
 	hist := NewForVector(2)
